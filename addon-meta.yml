@@ -1,4 +1,4 @@
-- name: Bartender4
-- description: README.md
-- version: 1.0.1
-- directories: ["Bartender4"]
+name: Bartender4
+description: README.md
+version: 1.0.1
+directories: ["Bartender4"]
