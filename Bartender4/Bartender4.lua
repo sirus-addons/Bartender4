@@ -68,9 +68,6 @@ function Bartender4:OnInitialize()
 end
 
 function Bartender4:HideBlizzard()
-	--MultiActionBar_Update = function() end
-	MultiActionBar_UpdateGrid = function() end
-
 	-- Hide MultiBar Buttons, but keep the bars alive
 	for i=1,12 do
 		_G["ActionButton" .. i]:Hide()
@@ -88,10 +85,7 @@ function Bartender4:HideBlizzard()
 		_G["MultiBarLeftButton" .. i]:Hide()
 		_G["MultiBarLeftButton" .. i]:UnregisterAllEvents()
 	end
-	--UIPARENT_MANAGED_FRAME_POSITIONS['MultiBarRight'] = nil
-	--UIPARENT_MANAGED_FRAME_POSITIONS['MultiBarLeft'] = nil
-	--UIPARENT_MANAGED_FRAME_POSITIONS['MultiBarBottomLeft'] = nil
-	--UIPARENT_MANAGED_FRAME_POSITIONS['MultiBarBottomRight'] = nil
+
 	UIPARENT_MANAGED_FRAME_POSITIONS['MainMenuBar'] = nil
 	UIPARENT_MANAGED_FRAME_POSITIONS['ShapeshiftBarFrame'] = nil
 	UIPARENT_MANAGED_FRAME_POSITIONS['PossessBarFrame'] = nil
@@ -100,20 +94,9 @@ function Bartender4:HideBlizzard()
 	MainMenuBar:UnregisterAllEvents()
 	MainMenuBar:Hide()
 
-	--MainMenuBarArtFrame:UnregisterEvent("PLAYER_ENTERING_WORLD")
-	--MainMenuBarArtFrame:UnregisterEvent("BAG_UPDATE")
 	MainMenuBarArtFrame:UnregisterEvent("ACTIONBAR_PAGE_CHANGED")
-	--MainMenuBarArtFrame:UnregisterEvent("KNOWN_CURRENCY_TYPES_UPDATE")
-	--MainMenuBarArtFrame:UnregisterEvent("CURRENCY_DISPLAY_UPDATE")
 	MainMenuBarArtFrame:UnregisterEvent("ADDON_LOADED")
-	--MainMenuBarArtFrame:UnregisterEvent("UNIT_ENTERING_VEHICLE")
-	--MainMenuBarArtFrame:UnregisterEvent("UNIT_ENTERED_VEHICLE")
-	--MainMenuBarArtFrame:UnregisterEvent("UNIT_EXITING_VEHICLE")
-	--MainMenuBarArtFrame:UnregisterEvent("UNIT_EXITED_VEHICLE")
 	MainMenuBarArtFrame:Hide()
-
-	--MainMenuExpBar:UnregisterAllEvents()
-	--MainMenuExpBar:Hide()
 
 	ShapeshiftBarFrame:UnregisterAllEvents()
 	ShapeshiftBarFrame:Hide()
