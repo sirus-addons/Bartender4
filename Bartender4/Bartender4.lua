@@ -68,6 +68,8 @@ function Bartender4:OnInitialize()
 end
 
 function Bartender4:HideBlizzard()
+	MultiActionBar_UpdateGrid = function() end
+
 	-- Hide MultiBar Buttons, but keep the bars alive
 	for i=1,12 do
 		_G["ActionButton" .. i]:Hide()
