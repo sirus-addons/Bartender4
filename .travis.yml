@@ -10,7 +10,7 @@ before_deploy:
 deploy:
   provider: releases
   api_key: $GITHUB_TOKEN
-  file: ${TRAVIS_REPO_SLUG#*/}".zip"
+  file: ${TRAVIS_REPO_SLUG#*/}.zip
   skip_cleanup: true
   on:
     tags: false
