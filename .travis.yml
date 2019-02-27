@@ -1,0 +1,13 @@
+language: python
+script: echo "Build" && true
+
+before_deploy:
+  - zip -r ${TRAVIS_REPO_SLUG#*/} ./ -x *.git* -x README.md -x addon-meta.yml
+
+deploy:
+  provider: releases
+  api_key: $GITHUB_TOKEN
+  file: ${TRAVIS_REPO_SLUG#*/}".zip"
+  skip_cleanup: true
+  on:
+    tags: true
