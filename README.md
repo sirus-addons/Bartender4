@@ -1,18 +1,11 @@
-# Bartender4
-Bartender4 is a full ActionBar replacement mod. It provides you with all the features needed to fully customization most aspects of your action and related bars.
+**Bartender4** - это полная модификация замены стандартных панелей команд. Она предоставляет вам все функции, необходимые для полной настройки большинства аспектов ваших действий и связанных с ними панелей.
 
-## Features
+Характеристики
+Поддержка всех панелей команд и всех связанных панелей - 10 панелей команд - Стойки - Панель питомца - Сумки - Микро-меню - Панель опыта/Панель репутации
+- Все панели полностью настраиваемы (настройки Масштаб, Альфа, Затемнение, ...)
+- Очень гибкий и настраиваемый
+- Дополнительные параметры раскладки и подкачки для панелей команд - Переключение всех панелей на основе позиционирования или модификаторов
 
- - Support for all Action Bars and all related bars
- --   10 Action Bars
---   Stance Bar
---   Pet Bar
---   Bag Bar
---   Micro Menu
---   XP/Reputation Bar
--   All Bars are fully customizable (Scale, Alpha, Fade-Out settings, ...)
--   Very flexible and customizable Show/Hide driver based on Macro Conditions
--   Additional Layout and Paging settings for Action Bars
---   Page all bars based on Stance or Modifier
---   Possess Bar support
---   Custom State driver support with Macro Conditions
+Вызов настроек из чата: /bar , /bt
+
+*Спасибо игроку [Os](https://forum.sirus.su/members/17os86.175882/) за перевод описания на Русский Язык.*
