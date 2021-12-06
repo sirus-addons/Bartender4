@@ -215,7 +215,8 @@ function ButtonBar:UpdateButtonLayout()
 			buttons[i]:ClearSetPoint(v1 .. h1, buttons[i-ButtonPerRow], v2 .. h1, 0, -vpad)
 		-- align to the previous button
 		else
-			buttons[i]:ClearSetPoint("TOP" .. h1, buttons[i-1], "TOP" .. h2, hpad, 0)
+			buttons[i]:ClearAllPoints()
+			buttons[i]:SetPoint("TOP" .. h1, buttons[i-1], "TOP" .. h2, hpad, 0)
 		end
 	end
 
