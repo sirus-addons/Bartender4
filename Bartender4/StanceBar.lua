@@ -213,7 +213,9 @@ function StanceBar:ApplyConfig(config)
 	ButtonBar.ApplyConfig(self, config)
 
 	if not self.config.position.x then
-		self:ClearSetPoint("CENTER", -55, -10)
+		self:ClearAllPoints()
+		self:SetPoint("CENTER", -55, -10)
+		-- self:ClearSetPoint("CENTER", -55, -10)
 		self:SavePosition()
 	end
 

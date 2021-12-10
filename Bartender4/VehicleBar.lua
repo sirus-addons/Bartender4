@@ -94,7 +94,9 @@ function VehicleBar:ApplyConfig(config)
 	ButtonBar.ApplyConfig(self, config)
 
 	if not self.config.position.x then
-		self:ClearSetPoint("CENTER", 120, 27)
+		self:ClearAllPoints()
+		self:SetPoint("CENTER", 120, 27)
+		-- self:ClearSetPoint("CENTER", 120, 27)
 		self:SavePosition()
 	end
 

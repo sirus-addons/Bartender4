@@ -88,7 +88,9 @@ function MicroMenuBar:ApplyConfig(config)
 	ButtonBar.ApplyConfig(self, config)
 
 	if not self.config.position.x then
-		self:ClearSetPoint("CENTER", -105, 30)
+		self:ClearAllPoints()
+		self:SetPoint("CENTER", -105, 30)
+		-- self:ClearSetPoint("CENTER", -105, 30)
 		self:SavePosition()
 	end
 

@@ -14,7 +14,9 @@ local initialPosition
 do
 	-- Sets the Bar to its initial Position in the Center of the Screen
 	function initialPosition(bar)
-		bar:ClearSetPoint("CENTER", 0, -250 + (bar.id-1) * 38)
+		bar:ClearAllPoints()
+		bar:SetPoint("CENTER", 0, -250 + (bar.id-1) * 38)
+		-- bar:ClearSetPoint("CENTER", 0, -250 + (bar.id-1) * 38)
 		bar:SavePosition()
 	end
 end

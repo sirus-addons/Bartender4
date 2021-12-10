@@ -100,7 +100,9 @@ function PetBar:ApplyConfig(config)
 	ButtonBar.ApplyConfig(self, config)
 
 	if not self.config.position.x then
-		self:ClearSetPoint("CENTER", 0, 70)
+		self:ClearAllPoints()
+		self:SetPoint("CENTER", 0, 70)
+		-- self:ClearSetPoint("CENTER", 0, 70)
 		self:SavePosition()
 	end
 

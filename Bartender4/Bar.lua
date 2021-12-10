@@ -51,7 +51,9 @@ do
 		local x,y,anchor = nil, nil, self:GetAnchor()
 		x = (self.config.position.growHorizontal == "RIGHT") and self:GetLeft() or self:GetRight()
 		y = (self.config.position.growVertical == "DOWN") and self:GetTop() or self:GetBottom()
-		self:ClearSetPoint(anchor, UIParent, "BOTTOMLEFT", x, y)
+		self:ClearAllPoints()
+		self:SetPoint(anchor, UIParent, "BOTTOMLEFT", x, y)
+		-- self:ClearSetPoint(anchor, UIParent, "BOTTOMLEFT", x, y)
 		self:SetWidth(self.overlay:GetWidth())
 		self:SetHeight(self.overlay:GetHeight())
 	end
@@ -60,7 +62,9 @@ do
 		local x,y,anchor = nil, nil, self:GetAnchor()
 		x = (self.config.position.growHorizontal == "RIGHT") and self:GetLeft() or self:GetRight()
 		y = (self.config.position.growVertical == "DOWN") and self:GetTop() or self:GetBottom()
-		self:ClearSetPoint(anchor, UIParent, "BOTTOMLEFT", x, y)
+		self:ClearAllPoints()
+		self:SetPoint(anchor, UIParent, "BOTTOMLEFT", x, y)
+		-- self:ClearSetPoint(anchor, UIParent, "BOTTOMLEFT", x, y)
 		self:SetWidth(1)
 		self:SetHeight(1)
 	end
@@ -248,7 +252,9 @@ function Bar:UpgradeConfig()
 			local point, relPoint = pos.point, pos.relPoint
 			if x and y and point and relPoint then
 				x, y = x/s, y/s
-				self:ClearSetPoint(point, UIParent, relPoint, x, y)
+				self:ClearAllPoints()
+				self:SetPoint(point, UIParent, relPoint, x, y)
+				-- self:ClearSetPoint(point, UIParent, relPoint, x, y)
 				self:SavePosition()
 				pos.relPoint = nil
 			end
@@ -298,7 +304,9 @@ function Bar:SetSize(width, height)
 		self:SetWidth(width)
 		self:SetHeight(height or width)
 		local x, y = self:GetLeft(), self:GetTop()
-		self:ClearSetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", x, y)
+		self:ClearAllPoints()
+		self:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", x, y)
+		-- self:ClearSetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", x, y)
 		self:SetWidth(1)
 		self:SetHeight(1)
 		self:SavePosition()

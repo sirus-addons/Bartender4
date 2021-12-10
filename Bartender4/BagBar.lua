@@ -48,7 +48,9 @@ function BagBar:ApplyConfig(config)
 	ButtonBar.ApplyConfig(self, config)
 
 	if not self.config.position.x then
-		self:ClearSetPoint("CENTER", 142, -18)
+		self:ClearAllPoints()
+		self:SetPoint("CENTER", 142, -18)
+		-- self:ClearSetPoint("CENTER", 142, -18)
 		self:SavePosition()
 	end
 
@@ -71,7 +73,9 @@ function BagBar:FeedButtons()
 			local btn = table.remove(self.buttons)
 			btn:Hide()
 			btn:SetParent(UIParent)
-			btn:ClearSetPoint("CENTER")
+			btn:ClearAllPoints()
+			btn:SetPoint("CENTER")
+			-- btn:ClearSetPoint("CENTER")
 			if btn ~= KeyRingButton and btn.LBFButtonData then
 				local group = self.LBFGroup
 				group:RemoveButton(btn)
