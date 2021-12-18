@@ -48,14 +48,14 @@ function MicroMenuMod:OnEnable()
 
 		MicroMenuMod.button_count = #buttons
 
-		self:SecureHook("UpdateMicroButtons")
-
 		for i,v in pairs(buttons) do
 			v:SetParent(self.bar)
 			v:Show()
 			v:SetFrameLevel(self.bar:GetFrameLevel() + 1)
 			v.ClearSetPoint = self.bar.ClearSetPoint
 		end
+
+		self:SecureHook("UpdateMicroButtons")
 	end
 	self.bar:Enable()
 	self:ToggleOptions()
