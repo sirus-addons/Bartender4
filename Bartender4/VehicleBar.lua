@@ -3,16 +3,19 @@
 	All rights reserved.
 ]]
 local L = LibStub("AceLocale-3.0"):GetLocale("Bartender4")
+
 -- register module
-local VehicleBarMod = Bartender4:NewModule("Vehicle")
+local VehicleBarMod = Bartender4:NewModule("Vehicle", "AceHook-3.0")
 
 -- fetch upvalues
 local ButtonBar = Bartender4.ButtonBar.prototype
 
+local table_insert, setmetatable, pairs = table.insert, setmetatable, pairs
+
+-- GLOBALS: MainMenuBarVehicleLeaveButton, CanExitVehicle
+
 -- create prototype information
 local VehicleBar = setmetatable({}, {__index = ButtonBar})
-
-local table_insert = table.insert
 
 local defaults = { profile = Bartender4:Merge({
 	enabled = true,
@@ -48,26 +51,24 @@ function VehicleBarMod:OnEnable()
 			v:Show()
 			v.ClearSetPoint = self.bar.ClearSetPoint
 		end
-
-		self.bar:SetScript("OnEvent", self.bar.OnEvent)
-		self.bar:RegisterEvent("UNIT_ENTERED_VEHICLE")
-
-		-- setup button skins
-		VehicleMenuBarPitchUpButton:GetNormalTexture():SetTexture([[Interface\Vehicles\UI-Vehicles-Button-Pitch-Up]])
-		VehicleMenuBarPitchUpButton:GetNormalTexture():SetTexCoord(0.21875, 0.765625, 0.234375, 0.78125)
-		VehicleMenuBarPitchUpButton:GetPushedTexture():SetTexture([[Interface\Vehicles\UI-Vehicles-Button-Pitch-Down]])
-		VehicleMenuBarPitchUpButton:GetPushedTexture():SetTexCoord(0.21875, 0.765625, 0.234375, 0.78125)
-
-		VehicleMenuBarPitchDownButton:GetNormalTexture():SetTexture([[Interface\Vehicles\UI-Vehicles-Button-PitchDown-Up]])
-		VehicleMenuBarPitchDownButton:GetNormalTexture():SetTexCoord(0.21875, 0.765625, 0.234375, 0.78125)
-		VehicleMenuBarPitchDownButton:GetPushedTexture():SetTexture([[Interface\Vehicles\UI-Vehicles-Button-PitchDown-Down]])
-		VehicleMenuBarPitchDownButton:GetPushedTexture():SetTexCoord(0.21875, 0.765625, 0.234375, 0.78125)
-
-		VehicleMenuBarLeaveButton:GetNormalTexture():SetTexture([[Interface\Vehicles\UI-Vehicles-Button-Exit-Up]])
-		VehicleMenuBarLeaveButton:GetNormalTexture():SetTexCoord(0.140625, 0.859375, 0.140625, 0.859375)
-		VehicleMenuBarLeaveButton:GetPushedTexture():SetTexture([[Interface\Vehicles\UI-Vehicles-Button-Exit-Down]])
-		VehicleMenuBarLeaveButton:GetPushedTexture():SetTexCoord(0.140625, 0.859375, 0.140625, 0.859375)
 	end
+
+	VehicleMenuBarPitchUpButton:GetNormalTexture():SetTexture([[Interface\Vehicles\UI-Vehicles-Button-Pitch-Up]])
+	VehicleMenuBarPitchUpButton:GetNormalTexture():SetTexCoord(0.21875, 0.765625, 0.234375, 0.78125)
+	VehicleMenuBarPitchUpButton:GetPushedTexture():SetTexture([[Interface\Vehicles\UI-Vehicles-Button-Pitch-Down]])
+	VehicleMenuBarPitchUpButton:GetPushedTexture():SetTexCoord(0.21875, 0.765625, 0.234375, 0.78125)
+
+	VehicleMenuBarPitchDownButton:GetNormalTexture():SetTexture([[Interface\Vehicles\UI-Vehicles-Button-PitchDown-Up]])
+	VehicleMenuBarPitchDownButton:GetNormalTexture():SetTexCoord(0.21875, 0.765625, 0.234375, 0.78125)
+	VehicleMenuBarPitchDownButton:GetPushedTexture():SetTexture([[Interface\Vehicles\UI-Vehicles-Button-PitchDown-Down]])
+	VehicleMenuBarPitchDownButton:GetPushedTexture():SetTexCoord(0.21875, 0.765625, 0.234375, 0.78125)
+
+	VehicleMenuBarLeaveButton:GetNormalTexture():SetTexture([[Interface\Vehicles\UI-Vehicles-Button-Exit-Up]])
+	VehicleMenuBarLeaveButton:GetNormalTexture():SetTexCoord(0.140625, 0.859375, 0.140625, 0.859375)
+	VehicleMenuBarLeaveButton:GetPushedTexture():SetTexture([[Interface\Vehicles\UI-Vehicles-Button-Exit-Down]])
+	VehicleMenuBarLeaveButton:GetPushedTexture():SetTexCoord(0.140625, 0.859375, 0.140625, 0.859375)
+
+	self:RawHook("MainMenuBarVehicleLeaveButton_Update", true)
 	self.bar:Enable()
 	self:ToggleOptions()
 	self:ApplyConfig()
@@ -90,6 +91,22 @@ end
 VehicleBar.button_width = 40
 VehicleBar.button_height = 40
 VehicleBar.LBFOverride = true
+
+local function ShouldVehicleButtonBeShown()
+	return CanExitVehicle() or UnitOnTaxi("player")
+end
+
+function VehicleBarMod:MainMenuBarVehicleLeaveButton_Update()
+	if ShouldVehicleButtonBeShown() then
+		MainMenuBarVehicleLeaveButton:Show()
+		MainMenuBarVehicleLeaveButton:Enable()
+	else
+		MainMenuBarVehicleLeaveButton:SetHighlightTexture([[Interface\Buttons\ButtonHilight-Square]], "ADD")
+		MainMenuBarVehicleLeaveButton:UnlockHighlight()
+		MainMenuBarVehicleLeaveButton:Hide()
+	end
+end
+
 function VehicleBar:ApplyConfig(config)
 	ButtonBar.ApplyConfig(self, config)
 
@@ -99,28 +116,4 @@ function VehicleBar:ApplyConfig(config)
 	end
 
 	self:UpdateButtonLayout()
-end
-
-function VehicleBar:OnEvent(event, arg1)
-	if event == "UNIT_ENTERED_VEHICLE" then
-		if arg1 == "player" then
-			self:UpdateButtonVisibility()
-		end
-	end
-end
-
-function VehicleBar:UpdateButtonVisibility()
-	if IsVehicleAimAngleAdjustable() then
-		_G["VehicleMenuBarPitchUpButton"]:Show()
-		_G["VehicleMenuBarPitchDownButton"]:Show()
-	else
-		_G["VehicleMenuBarPitchUpButton"]:Hide()
-		_G["VehicleMenuBarPitchDownButton"]:Hide()
-	end
-
-	if CanExitVehicle() then
-		_G["VehicleMenuBarLeaveButton"]:Show()
-	else
-		_G["VehicleMenuBarLeaveButton"]:Hide()
-	end
 end
