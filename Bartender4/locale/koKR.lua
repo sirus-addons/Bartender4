@@ -220,8 +220,10 @@ L["The default behaviour of this bar when no state-based paging option affects i
 L["The Positioning options here will allow you to position the bar to your liking and with an absolute precision."] = "이 위치잡기 옵션은 완전히 정밀하며 당신이 좋아하는 곳에 당신의 바가 위치하도록 할 것입니다."
 L["This bar will be hidden once you enter combat."] = "전투에 참여하면 바가 숨겨집니다."
 L["This bar will be hidden whenever you are not in combat."] = "전투가 종료되면 바가 숨겨집니다."
+L["Toggle actions on key press instead of release"] = "버튼을 누름과 동시에 행동을 취함"
 L[ [=[Toggle Button Zoom
 For more style options you need to install ButtonFacade]=] ] = "버튼 확대를 전환합니다. /n보다 더 많은 양식 옵션을 위해서는 애드온 ButtonFacade의 설치가 필요합니다."
+L["Toggles actions immediately when you press the key, and not only on release. Note that draging actions will cause them to be cast in this mode."] = "버튼을 누른후가 아닌 버튼을 누르자 마자 버튼의 동작(시전, 사용 등)이 바로 시작됩니다. 이 모드에서는 버튼을 드래그할 때 바로 시전될 수 있으니 주의하세요."
 L["Toggle the button grid."] = "빈 버튼의 외형을 표시합니다."
 L["Toggle the use of the modifier-based focus-cast functionality."] = "주시대상에게 시전할 기능키를 사용합니다."
 L["Toggle the use of the modifier-based self-cast functionality."] = "자신에게 시전할 기능키를 사용합니다."

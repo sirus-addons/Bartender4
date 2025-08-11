@@ -226,8 +226,10 @@ L["The default behaviour of this bar when no state-based paging option affects i
 L["The Positioning options here will allow you to position the bar to your liking and with an absolute precision."] = true
 L["This bar will be hidden once you enter combat."] = true
 L["This bar will be hidden whenever you are not in combat."] = true
+L["Toggle actions on key press instead of release"] = true
 L[ [=[Toggle Button Zoom
 For more style options you need to install ButtonFacade]=] ] = true
+L["Toggles actions immediately when you press the key, and not only on release. Note that draging actions will cause them to be cast in this mode."] = true
 L["Toggle the button grid."] = true
 L["Toggle the use of the modifier-based focus-cast functionality."] = true
 L["Toggle the use of the modifier-based self-cast functionality."] = true

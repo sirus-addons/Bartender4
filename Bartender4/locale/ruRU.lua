@@ -225,9 +225,11 @@ L["The default behaviour of this bar when no state-based paging option affects i
 L["The Positioning options here will allow you to position the bar to your liking and with an absolute precision."] = "Опции позиционирования позволят вам определить местоположение панелей с абсолютной точностью"
 L["This bar will be hidden once you enter combat."] = "Данная панель будет скрыта, как только вы вступите в бой."
 L["This bar will be hidden whenever you are not in combat."] = "Данная панель будет скрыта, пока вы находитесь вне боя."
+L["Toggle actions on key press instead of release"] = "Применять способности сразу при нажатии клавиши, а не после того как вы ее отпустите."
 L[ [=[Toggle Button Zoom
 For more style options you need to install ButtonFacade]=] ] = [=[Переключение увеличения кнопок
 Для дополнительных стилей и настроек необходимо установить ButtonFacade]=]
+L["Toggles actions immediately when you press the key, and not only on release. Note that draging actions will cause them to be cast in this mode."] = "Способности применяются сразу при нажатии клавиши, а не после того как вы ее отпустите. Имейте ввиду, что в этом режиме перетаскивание клавиш будет вызывать применение этих способностей."
 L["Toggle the button grid."] = "Переключение отображения сетки пустых кнопок."
 L["Toggle the use of the modifier-based focus-cast functionality."] = "Переключить использование заклинание-на-фокус функциональности, основанной на модификаторах."
 L["Toggle the use of the modifier-based self-cast functionality."] = "Включить/отключить функцию Чтение на себя по модификатору."

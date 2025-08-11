@@ -229,9 +229,11 @@ L["The default behaviour of this bar when no state-based paging option affects i
 L["The Positioning options here will allow you to position the bar to your liking and with an absolute precision."] = "定位选项可以依个人喜好和绝对精确定位动作条。"
 L["This bar will be hidden once you enter combat."] = "当你进入战斗状态时将隐藏。"
 L["This bar will be hidden whenever you are not in combat."] = "当你脱离战斗状态时将隐藏。"
+L["Toggle actions on key press instead of release"] = "按下按键而不是释放时切换动作"
 L[ [=[Toggle Button Zoom
 For more style options you need to install ButtonFacade]=] ] = [=[启用或关闭按钮缩放
 若需要进一步改变按钮风格，您需要安装插件 ButtonFacade]=]
+L["Toggles actions immediately when you press the key, and not only on release. Note that draging actions will cause them to be cast in this mode."] = "按下按键立刻切换动作，而不是释放。请注意，拖延动作会导致他们在此模式下施放。"
 L["Toggle the button grid."] = "勾选该选项将显示空的按钮。"
 L["Toggle the use of the modifier-based focus-cast functionality."] = "启用或关闭焦点施法功能。"
 L["Toggle the use of the modifier-based self-cast functionality."] = "启用或关闭自我施法功能。"

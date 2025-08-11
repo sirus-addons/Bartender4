@@ -225,9 +225,11 @@ L["The default behaviour of this bar when no state-based paging option affects i
 L["The Positioning options here will allow you to position the bar to your liking and with an absolute precision."] = "Diese Optionen erlauben dir, die Leiste nach deinen Vorstellungen und absolut präzise zu positionieren."
 L["This bar will be hidden once you enter combat."] = "Diese Leiste wird versteckt sobald man sich im Kampf befindet."
 L["This bar will be hidden whenever you are not in combat."] = "Diese Leiste wird versteckt solange man sich nicht im Kampf befindet."
+L["Toggle actions on key press instead of release"] = "Löst Aktionen beim Betätigen der Taste und nicht beim Loslassen aus."
 L[ [=[Toggle Button Zoom
 For more style options you need to install ButtonFacade]=] ] = [=[Schaltflächen Zoom umschalten
 Für weitere Stiloptionen muss ButtonFacade installiert werden.]=]
+L["Toggles actions immediately when you press the key, and not only on release. Note that draging actions will cause them to be cast in this mode."] = "Löst Aktionen sofortig beim Drücken der Taste und nicht erst beim Loslassen aus. Beim Verschieben einer Aktion kann sie ebenfalls ausgelöst werden, wenn diese Option aktiviert ist." -- Needs review
 L["Toggle the button grid."] = "Das Schaltflächen Gitternetz umschalten."
 L["Toggle the use of the modifier-based focus-cast functionality."] = "Die modifikatorbasierenden Fokuszauber-Funktionalität ein/ausschalten."
 L["Toggle the use of the modifier-based self-cast functionality."] = "Schaltet die modifikatorbasierenden Selbstzauber ein oder aus."

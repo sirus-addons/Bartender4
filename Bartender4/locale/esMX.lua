@@ -229,9 +229,11 @@ As a quick preview of whats planned:
 -- L["The Positioning options here will allow you to position the bar to your liking and with an absolute precision."] = "The Positioning options here will allow you to position the bar to your liking and with an absolute precision."
 -- L["This bar will be hidden once you enter combat."] = "This bar will be hidden once you enter combat."
 -- L["This bar will be hidden whenever you are not in combat."] = "This bar will be hidden whenever you are not in combat."
+-- L["Toggle actions on key press instead of release"] = "Toggle actions on key press instead of release"
 --[==[ L[ [=[Toggle Button Zoom
 For more style options you need to install ButtonFacade]=] ] = [=[Toggle Button Zoom
 For more style options you need to install ButtonFacade]=] ]==]
+-- L["Toggles actions immediately when you press the key, and not only on release. Note that draging actions will cause them to be cast in this mode."] = "Toggles actions immediately when you press the key, and not only on release. Note that draging actions will cause them to be cast in this mode."
 -- L["Toggle the button grid."] = "Toggle the button grid."
 -- L["Toggle the use of the modifier-based focus-cast functionality."] = "Toggle the use of the modifier-based focus-cast functionality."
 -- L["Toggle the use of the modifier-based self-cast functionality."] = "Toggle the use of the modifier-based self-cast functionality."

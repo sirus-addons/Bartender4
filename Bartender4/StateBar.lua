@@ -259,3 +259,7 @@ function StateBar:UpdateSelfCast()
 	self:ForAll("UpdateSelfCast")
 	self:UpdateStates()
 end
+
+function StateBar:UpdateOnClickDown()
+	self:ForAll("UpdateOnClickDown")
+end
