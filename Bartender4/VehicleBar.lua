@@ -39,6 +39,7 @@ function VehicleBarMod:OnEnable()
 		self.bar.content.ClearSetPoint = self.bar.ClearSetPoint
 	end
 	self:RawHook("MainMenuBarVehicleLeaveButton_Update", true)
+	self:SecureHook("UIParent_ManageFramePositions")
 	self.bar:Enable()
 	self:ToggleOptions()
 	self:ApplyConfig()
@@ -61,6 +62,12 @@ function VehicleBarMod:MainMenuBarVehicleLeaveButton_Update()
 		MainMenuBarVehicleLeaveButton:SetHighlightTexture([[Interface\Buttons\ButtonHilight-Square]], "ADD")
 		MainMenuBarVehicleLeaveButton:UnlockHighlight()
 		MainMenuBarVehicleLeaveButton:Hide()
+	end
+end
+
+function VehicleBarMod:UIParent_ManageFramePositions()
+	if ShouldVehicleButtonBeShown() then
+		self.bar:PerformLayout()
 	end
 end
 

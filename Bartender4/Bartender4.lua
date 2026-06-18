@@ -108,6 +108,8 @@ function Bartender4:HideBlizzard()
 
 	PossessBarFrame:UnregisterAllEvents()
 	PossessBarFrame:Hide()
+	
+	PetActionBarFrame:SetParent(MainMenuBar)
 
 	if PlayerTalentFrame then
 		PlayerTalentFrame:UnregisterEvent('ACTIVE_TALENT_GROUP_CHANGED')

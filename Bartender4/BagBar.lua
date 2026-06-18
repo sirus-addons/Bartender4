@@ -100,8 +100,6 @@ function BagBar:FeedButtons()
 		v:SetParent(self)
 		v:Show()
 		if v ~= KeyRingButton then
-			v:SetNormalTexture("")
-
 			if LBF then
 				local group = self.LBFGroup
 				if not v.LBFButtonData then
