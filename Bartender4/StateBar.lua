@@ -94,7 +94,6 @@ Bartender4.StanceMap = DefaultStanceMap
 local stancemap
 function StateBar:UpdateStates(returnOnly)
 	if not self.buttons then return end
-	self.statebutton = {}
 	if not stancemap and DefaultStanceMap[playerclass] then
 		stancemap = DefaultStanceMap[playerclass]
 	end

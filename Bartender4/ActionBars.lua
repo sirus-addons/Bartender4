@@ -57,9 +57,6 @@ function BT4ActionBars:OnInitialize()
 	ActionBar_MT = {__index = ActionBar}
 end
 
-
-local LBF = LibStub("LibButtonFacade", true)
-
 -- setup the 10 actionbars
 local first = true
 function BT4ActionBars:OnEnable()
@@ -140,14 +137,6 @@ function BT4ActionBars:ToggleModule()
 	return
 end
 
-function BT4ActionBars:UpdateButtons(force)
-	for i,v in ipairs(self.actionbars) do
-		for j,button in ipairs(v.buttons) do
-			button:UpdateAction(force)
-		end
-	end
-end
-
 function BT4ActionBars:ReassignBindings()
 	if InCombatLockdown() then return end
 	if not self.actionbars or not self.actionbars[1] then return end
@@ -161,6 +150,7 @@ function BT4ActionBars:ReassignBindings()
 		end
 	end
 
+	local renamed
 	for i = 1, 120 do
 		-- rename old bindings from <buttonname>Secure to only <buttonname>
 		local button, real_button = ("CLICK BT4Button%dSecure:LeftButton"):format(i), ("BT4Button%d"):format(i)
@@ -169,10 +159,13 @@ function BT4ActionBars:ReassignBindings()
 			local key = select(k, GetBindingKey(button))
 			if key and key ~= "" then
 				SetBindingClick(key, real_button, "LeftButton")
+				renamed = true
 			end
 		end
 	end
-	SaveBindings(GetCurrentBindingSet() or 1)
+	if renamed then
+		SaveBindings(GetCurrentBindingSet() or 1)
+	end
 end
 
 -- Creates a new bar object based on the id and the specified config
@@ -227,8 +220,4 @@ function BT4ActionBars:ForAll(method, ...)
 			func(bar, ...)
 		end
 	end
-end
-
-function BT4ActionBars:ForAllButtons(...)
-	self:ForAll("ForAll", ...)
 end

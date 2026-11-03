@@ -170,5 +170,3 @@ function BlizzardArt:ApplyConfig()
 end
 
 BlizzardArt.ClickThroughSupport = false
-function BlizzardArt:ControlClickThrough()
-end

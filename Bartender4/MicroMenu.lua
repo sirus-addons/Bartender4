@@ -68,11 +68,17 @@ end
 
 function MicroMenuMod:RestoreButtons()
 	if not self:IsEnabled() then return end
+	local moved
 	for k,v in pairs(self.bar.buttons) do
-		v:SetParent(self.bar)
-		v:Show()
+		if v:GetParent() ~= self.bar then
+			v:SetParent(self.bar)
+			v:Show()
+			moved = true
+		end
 	end
-	self.bar:UpdateButtonLayout()
+	if moved then
+		self.bar:UpdateButtonLayout()
+	end
 end
 
 function MicroMenuMod:UpdateMicroButtons()
@@ -81,9 +87,14 @@ function MicroMenuMod:UpdateMicroButtons()
 	end
 end
 
-MicroMenuBar.button_width = 28
-MicroMenuBar.button_height = 58
-MicroMenuBar.vpad_offset = -21
+if Bartender4.IsDF then
+	MicroMenuBar.button_width = 32
+	MicroMenuBar.button_height = 40
+else
+	MicroMenuBar.button_width = 28
+	MicroMenuBar.button_height = 58
+	MicroMenuBar.vpad_offset = -21
+end
 function MicroMenuBar:ApplyConfig(config)
 	ButtonBar.ApplyConfig(self, config)
 

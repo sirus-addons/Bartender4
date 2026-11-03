@@ -7,7 +7,6 @@ local L = LibStub("AceLocale-3.0"):GetLocale("Bartender4")
 local PetBarMod = Bartender4:NewModule("PetBar", "AceEvent-3.0")
 
 -- fetch upvalues
-local ActionBars = Bartender4:GetModule("ActionBars")
 local ButtonBar = Bartender4.ButtonBar.prototype
 
 -- create prototype information
@@ -45,8 +44,8 @@ function PetBarMod:OnEnable()
 	self.bar:RegisterEvent("PLAYER_CONTROL_GAINED")
 	self.bar:RegisterEvent("PLAYER_FARSIGHT_FOCUS_CHANGED")
 	self.bar:RegisterEvent("UNIT_PET")
-	self.bar:RegisterEvent("UNIT_FLAGS")
-	self.bar:RegisterEvent("UNIT_AURA")
+	self.bar:RegisterUnitEvent("UNIT_FLAGS", "pet")
+	self.bar:RegisterUnitEvent("UNIT_AURA", "pet")
 	self.bar:RegisterEvent("PET_BAR_UPDATE")
 	self.bar:RegisterEvent("PET_BAR_UPDATE_COOLDOWN")
 	self.bar:RegisterEvent("PET_BAR_SHOWGRID")
@@ -70,6 +69,7 @@ function PetBarMod:ReassignBindings()
 			SetOverrideBindingClick(self.bar, false, key, real_button)
 		end
 	end
+	self.bar:ForAll("UpdateHotkeys")
 end
 
 function PetBarMod:ApplyConfig()
@@ -106,5 +106,5 @@ function PetBar:ApplyConfig(config)
 
 	self:UpdateButtonLayout()
 	self:ForAll("Update")
-	self:ForAll("ApplyStyle", self.config.style)
+	self:ForAll("UpdateHotkeys")
 end

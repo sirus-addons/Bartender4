@@ -73,12 +73,12 @@ function LibKeyBound:Initialize()
 		header:SetWidth(256); header:SetHeight(64)
 		header:SetPoint('TOP', 0, 12)
 
-		local title = f:CreateFontString('ARTWORK')
+		local title = f:CreateFontString(nil, 'ARTWORK')
 		title:SetFontObject('GameFontNormal')
 		title:SetPoint('TOP', header, 'TOP', 0, -14)
 		title:SetText(L.BindingMode)
 
-		local desc = f:CreateFontString('ARTWORK')
+		local desc = f:CreateFontString(nil, 'ARTWORK')
 		desc:SetFontObject('GameFontHighlight')
 		desc:SetJustifyV('TOP')
 		desc:SetJustifyH('LEFT')
@@ -434,7 +434,7 @@ function LibKeyBound.Binder:Create()
 	bg:SetTexture(0, 0, 0, 0.5)
 	bg:SetAllPoints(binder)
 
-	local text = binder:CreateFontString('OVERLAY')
+	local text = binder:CreateFontString(nil, 'OVERLAY')
 	text:SetFontObject('GameFontNormalLarge')
 	text:SetTextColor(0, 1, 0)
 	text:SetAllPoints(binder)
@@ -472,7 +472,7 @@ function LibKeyBound.Binder:OnKeyDown(key)
 
 	local openChatKey = GetBindingKey('OPENCHAT')
 	if openChatKey and key == openChatKey then
-		ChatFrameEditBox:Show()
+		ChatFrame_OpenChat("")
 		return
 	end
 

@@ -4,7 +4,7 @@
 ]]
 local L = LibStub("AceLocale-3.0"):GetLocale("Bartender4")
 -- register module
-local BagBarMod = Bartender4:NewModule("BagBar", "AceHook-3.0")
+local BagBarMod = Bartender4:NewModule("BagBar")
 
 -- fetch upvalues
 local ButtonBar = Bartender4.ButtonBar.prototype
@@ -29,11 +29,17 @@ function BagBarMod:OnInitialize()
 	self:SetEnabledState(self.db.profile.enabled)
 end
 
-local noopFunc = function() end
-
 function BagBarMod:OnEnable()
 	if not self.bar then
 		self.bar = setmetatable(Bartender4.ButtonBar:Create("BagBar", self.db.profile, L["Bag Bar"]), {__index = BagBar})
+		if BagsBar then
+			BagBarExpandToggle:SetParent(Bartender4.UIHider)
+			hooksecurefunc(BagsBar, "Layout", function()
+				if self:IsEnabled() then
+					self.bar:UpdateButtonLayout()
+				end
+			end)
+		end
 	end
 	self.bar:Enable()
 	self:ToggleOptions()
@@ -56,7 +62,7 @@ function BagBar:ApplyConfig(config)
 	self:UpdateButtonLayout()
 end
 
-function clearSetPoint(btn, ...)
+local function clearSetPoint(btn, ...)
 	btn:ClearAllPoints()
 	btn:SetPoint(...)
 end
@@ -64,17 +70,27 @@ end
 BagBar.button_width = 30
 BagBar.button_height = 30
 BagBarMod.button_count = 5
+local keyRingParent, keyRingPoint, keyRingShown
 function BagBar:FeedButtons()
 	local count = 1
 	if self.buttons then
 		while next(self.buttons) do
 			local btn = table.remove(self.buttons)
 			btn:Hide()
-			btn:SetParent(UIParent)
-			btn:ClearSetPoint("CENTER")
-			if btn ~= KeyRingButton and btn.LBFButtonData then
-				local group = self.LBFGroup
-				group:RemoveButton(btn)
+			if btn == KeyRingButton then
+				btn:SetParent(keyRingParent)
+				btn:ClearAllPoints()
+				btn:SetPoint(unpack(keyRingPoint))
+				if keyRingShown then
+					btn:Show()
+				end
+			else
+				btn:SetParent(UIParent)
+				btn:ClearSetPoint("CENTER")
+				if btn.LBFButtonData then
+					local group = self.LBFGroup
+					group:RemoveButton(btn)
+				end
 			end
 		end
 	else
@@ -82,6 +98,9 @@ function BagBar:FeedButtons()
 	end
 
 	if self.config.keyring then
+		if not keyRingParent then
+			keyRingParent, keyRingPoint, keyRingShown = KeyRingButton:GetParent(), {KeyRingButton:GetPoint(1)}, KeyRingButton:IsShown()
+		end
 		table_insert(self.buttons, KeyRingButton)
 		count = count + 1
 	end

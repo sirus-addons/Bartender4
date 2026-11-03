@@ -35,7 +35,7 @@ local Sticky = LibStub("LibSimpleSticky-1.0")
 local LibWin = LibStub("LibWindow-1.1")
 local snapBars = { WorldFrame, UIParent }
 
-local barOnEnter, barOnLeave, barOnDragStart, barOnDragStop, barOnClick, barOnUpdateFunc
+local barOnEnter, barOnLeave, barOnDragStart, barOnDragStop, barOnUpdateFunc
 do
 	function barOnEnter(self)
 		if not self:GetParent().isMoving then
@@ -83,20 +83,14 @@ do
 		local parent = self:GetParent()
 		if parent.isMoving then
 			if Bartender4.db.profile.snapping then
-				local sticky, stickTo = Sticky:StopMoving(parent)
+				Sticky:StopMoving(parent)
 				barReAnchorNormal(parent)
-				--Bartender4:Print(sticky, stickTo and stickTo:GetName() or nil)
 			else
 				parent:StopMovingOrSizing()
 			end
 			parent:SavePosition()
 			parent.isMoving = nil
 		end
-	end
-
-	function barOnClick(self)
-		-- TODO: Hide/Show bar on Click
-		-- TODO: Once dropdown config is stable, show dropdown on rightclick
 	end
 
 	function barOnUpdateFunc(self, elapsed)
@@ -147,7 +141,6 @@ function Bartender4.Bar:Create(id, config, name)
 	table_insert(snapBars, overlay)
 	overlay:EnableMouse(true)
 	overlay:RegisterForDrag("LeftButton")
-	overlay:RegisterForClicks("LeftButtonUp")
 	overlay:SetBackdrop({
 		bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
 		tile = true,
@@ -169,7 +162,6 @@ function Bartender4.Bar:Create(id, config, name)
 	overlay:SetScript("OnLeave", barOnLeave)
 	overlay:SetScript("OnDragStart", barOnDragStart)
 	overlay:SetScript("OnDragStop", barOnDragStop)
-	overlay:SetScript("OnClick", barOnClick)
 
 	overlay:SetFrameLevel(bar:GetFrameLevel() + 10)
 	bar:AnchorOverlay()

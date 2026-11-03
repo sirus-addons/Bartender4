@@ -7,17 +7,60 @@ local L = LibStub("AceLocale-3.0"):GetLocale("Bartender4")
 -- fetch upvalues
 local Bar = Bartender4.Bar.prototype
 
-local table_insert = table.insert
-
 local defaults = { profile = Bartender4:Merge({
 	enabled = false,
 }, Bartender4.Bar.defaults) }
 
+local RepBarMod, XPBarMod
+
+local function CaptureStatusBar(container)
+	local bar = container.shownBar
+	local module = (bar == ReputationWatchBar and RepBarMod) or (bar == MainMenuExpBar and XPBarMod)
+	if module and module:IsEnabled() and not container.isInEditMode then
+		bar:SetParent(module.bar)
+		module.bar:PerformLayout()
+		container:HideBase()
+	end
+end
+
+local statusBarsHooked
+local function CaptureStatusBars()
+	if not statusBarsHooked then
+		statusBarsHooked = true
+		for _, container in ipairs(StatusTrackingBarManager.barContainers) do
+			hooksecurefunc(container, "UpdateShownState", CaptureStatusBar)
+		end
+	end
+	for _, container in ipairs(StatusTrackingBarManager.barContainers) do
+		CaptureStatusBar(container)
+	end
+end
+
+local function EnableStatusBar(module, id, name, content)
+	if not module.bar then
+		module.bar = setmetatable(Bartender4.Bar:Create(id, module.db.profile, name), {__index = module.prototype})
+		module.bar.content = content
+
+		if not Bartender4.IsDF then
+			content:SetParent(module.bar)
+			content:Show()
+			content:SetFrameLevel(module.bar:GetFrameLevel() + 1)
+		end
+	end
+	module.bar:Enable()
+	module:ToggleOptions()
+	module:ApplyConfig()
+	if Bartender4.IsDF then
+		CaptureStatusBars()
+	end
+end
+
 -- register module
-local RepBarMod = Bartender4:NewModule("RepBar")
+RepBarMod = Bartender4:NewModule("RepBar")
 
 -- create prototype information
 local RepBar = setmetatable({}, {__index = Bar})
+RepBarMod.prototype = RepBar
 
 function RepBarMod:OnInitialize()
 	self.db = Bartender4.db:RegisterNamespace("RepBar", defaults)
@@ -25,19 +68,10 @@ function RepBarMod:OnInitialize()
 end
 
 function RepBarMod:OnEnable()
-	if not self.bar then
-		self.bar = setmetatable(Bartender4.Bar:Create("Rep", self.db.profile, L["Reputation Bar"]), {__index = RepBar})
-		self.bar.content = ReputationWatchBar
-
-		hooksecurefunc("ReputationWatchBar_Update",  function() self.bar:PerformLayout() end)
-
-		self.bar.content:SetParent(self.bar)
-		self.bar.content:Show()
-		self.bar.content:SetFrameLevel(self.bar:GetFrameLevel() + 1)
+	if not self.bar and not Bartender4.IsDF then
+		hooksecurefunc("ReputationWatchBar_Update", function() self.bar:PerformLayout() end)
 	end
-	self.bar:Enable()
-	self:ToggleOptions()
-	self:ApplyConfig()
+	EnableStatusBar(self, "Rep", L["Reputation Bar"], ReputationWatchBar)
 end
 
 function RepBarMod:ApplyConfig()
@@ -51,10 +85,17 @@ function RepBar:ApplyConfig(config)
 end
 
 function RepBar:PerformLayout()
-	self:SetSize(1032, 21)
 	local bar = self.content
-	bar:ClearAllPoints()
-	bar:SetPoint("TOPLEFT", self, "TOPLEFT", 5, -3)
+	if Bartender4.IsDF then
+		if bar:GetParent() ~= self then return end
+		self:SetSize(bar:GetWidth() + 6, bar:GetHeight() + 6)
+		bar:ClearAllPoints()
+		bar:SetPoint("TOPLEFT", self, "TOPLEFT", 3, -3)
+	else
+		self:SetSize(1032, 21)
+		bar:ClearAllPoints()
+		bar:SetPoint("TOPLEFT", self, "TOPLEFT", 5, -3)
+	end
 end
 
 RepBar.ClickThroughSupport = true
@@ -64,10 +105,11 @@ end
 
 
 -- register module
-local XPBarMod = Bartender4:NewModule("XPBar")
+XPBarMod = Bartender4:NewModule("XPBar")
 
 -- create prototype information
 local XPBar = setmetatable({}, {__index = Bar})
+XPBarMod.prototype = XPBar
 
 function XPBarMod:OnInitialize()
 	self.db = Bartender4.db:RegisterNamespace("XPBar", defaults)
@@ -75,17 +117,7 @@ function XPBarMod:OnInitialize()
 end
 
 function XPBarMod:OnEnable()
-	if not self.bar then
-		self.bar = setmetatable(Bartender4.Bar:Create("XP", self.db.profile, L["XP Bar"]), {__index = XPBar})
-		self.bar.content = MainMenuExpBar
-
-		self.bar.content:SetParent(self.bar)
-		self.bar.content:Show()
-		self.bar.content:SetFrameLevel(self.bar:GetFrameLevel() + 1)
-	end
-	self.bar:Enable()
-	self:ToggleOptions()
-	self:ApplyConfig()
+	EnableStatusBar(self, "XP", L["XP Bar"], MainMenuExpBar)
 end
 
 XPBarMod.ApplyConfig = RepBarMod.ApplyConfig

@@ -6,15 +6,10 @@ local L = LibStub("AceLocale-3.0"):GetLocale("Bartender4")
 
 local AceConfigDialog = LibStub("AceConfigDialog-3.0")
 
-local getFunc, setFunc
+local getFunc
 do
 	function getFunc(info)
 		return (info.arg and Bartender4.db.profile[info.arg] or Bartender4.db.profile[info[#info]])
-	end
-
-	function setFunc(info, value)
-		local key = info.arg or info[#info]
-		Bartender4.db.profile[key] = value
 	end
 end
 

@@ -5,14 +5,13 @@ All rights reserved, otherwise.
 ]]
 -- fetch upvalues
 local L = LibStub("AceLocale-3.0"):GetLocale("Bartender4")
-local Bar = Bartender4.Bar.prototype
 
 local DefaultsMod = Bartender4:NewModule("Defaults")
 
 function DefaultsMod:ToggleModule(info, val)
 	-- We are always enabled. Period.
 	if not self:IsEnabled() then
-		self:Enabled()
+		self:Enable()
 	end
 end
 
@@ -90,13 +89,11 @@ local function BuildBlizzardProfile()
 end
 
 local function ResetProfile()
+	Bartender4.db:ResetProfile()
 	if DefaultsMod.defaultType == "BLIZZARD" then
-		Bartender4.db:ResetProfile()
 		BuildBlizzardProfile()
-	else
-		Bartender4.db:ResetProfile()
+		Bartender4:UpdateModuleConfigs()
 	end
-	Bartender4:UpdateModuleConfigs()
 end
 
 function DefaultsMod:SetupOptions()
@@ -158,7 +155,8 @@ function DefaultsMod:SetupOptions()
 				order = 40,
 				type = "execute",
 				name = L["Reset profile"],
-				func = ResetProfile
+				func = ResetProfile,
+				confirm = true,
 			}
 		}
 		self.optionobject = Bartender4:NewOptionObject( otbl )

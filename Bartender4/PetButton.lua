@@ -60,7 +60,6 @@ function Bartender4.PetButton:Create(id, parent)
 	button:SetScript("OnDragStart", onDragStart)
 	button:SetScript("OnReceiveDrag", onReceiveDrag)
 
-	button.flash = _G[name .. "Flash"]
 	button.cooldown = _G[name .. "Cooldown"]
 	button.icon = _G[name .. "Icon"]
 	button.autocastable = _G[name .. "AutoCastable"]
@@ -144,7 +143,6 @@ function PetButtonPrototype:Update()
 		end
 	end
 	self:UpdateCooldown()
-	self:UpdateHotkeys()
 end
 
 function PetButtonPrototype:UpdateHotkeys()

@@ -2,15 +2,9 @@
 -- Please use the Localization App on WoWAce to Update this
 -- http://www.wowace.com/projects/bartender4/localization/ ;¶
 
-local debug = false
---[===[@debug@
-debug = true
---@end-debug@]===]
-
-local L = LibStub("AceLocale-3.0"):NewLocale("Bartender4", "enUS", true, debug)
+local L = LibStub("AceLocale-3.0"):NewLocale("Bartender4", "enUS", true)
 
 L["ActionBar Paging"] = true
-L["Alignment"] = true
 L["Alpha"] = true
 L["ALT"] = true
 L["Always Hide"] = true
@@ -119,15 +113,6 @@ My BagBar does not have the Keyring on it, how do i get it back?
 Its simple! Just check the Keyring option in the BagBars configuration menu, and it'll appear next to your bags.
 
 |cffffd200
-I've found a bug! Where do I report it?
-|r
-You can report bugs or give suggestions at the discussion forums at |cffffff78http://forums.wowace.com/showthread.php?t=12513|r or check the project page at |cffffff78http://www.wowace.com/projects/bartender4/|r
-
-Alternatively, you can also find us on |cffffff78irc://irc.freenode.org/wowace|r
-
-When reporting a bug, make sure you include the |cffffff78steps on how to reproduce the bug|r, supply any |cffffff78error messages|r with stack traces if possible, give the |cffffff78revision number|r of Bartender4 the problem occured in and state whether you are using an |cffffff78English client or otherwise|r.
-
-|cffffd200
 Who wrote this cool addon?
 |r
 Bartender4 was written by Nevcairiel of EU-Antonidas, the author of Bartender3!]=]
@@ -214,12 +199,6 @@ L["Stance Configuration"] = true
 L["State Configuration"] = true
 L["Switch this bar to the Possess Bar when possessing a npc (eg. Mind Control)"] = true
 L["Switch to key-binding mode"] = true
-L[ [=[The Alignment menu is still on the TODO.
-
-As a quick preview of whats planned:
-
-	- Absolute and relative Bar Positioning
-	- Bars "snapping" together and building clusters]=] ] = true
 L["The background of button places where no buttons are placed"] = true
 L["The bar default is to be visible all the time, you can configure conditions here to control when the bar should be hidden."] = true
 L["The default behaviour of this bar when no state-based paging option affects it."] = true

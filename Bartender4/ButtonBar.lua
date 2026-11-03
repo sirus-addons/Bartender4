@@ -118,7 +118,7 @@ function ButtonBar:SetHideHotkey(state)
 	if state ~= nil then
 		self.config.hidehotkey = state
 	end
-	self:ForAll("Update")
+	self:ForAll("UpdateHotkeys")
 end
 
 function ButtonBar:GetHideHotkey()

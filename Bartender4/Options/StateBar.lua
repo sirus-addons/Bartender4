@@ -4,7 +4,6 @@
 ]]
 local L = LibStub("AceLocale-3.0"):GetLocale("Bartender4")
 
-local Bar = Bartender4.Bar.prototype
 local ButtonBar = Bartender4.ButtonBar.prototype
 local StateBar = Bartender4.StateBar.prototype
 
@@ -54,8 +53,6 @@ do
 	end
 end
 
-
-local hasStances
 
 local validStanceTable = {
 	[0] = L["Don't Page"],

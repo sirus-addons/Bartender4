@@ -36,6 +36,14 @@ function MultiCastMod:OnEnable()
 		self.bar.content:SetParent(self.bar)
 		self.bar.content:Show()
 		self.bar.content:SetFrameLevel(self.bar:GetFrameLevel() + 1)
+
+		if Bartender4.IsDF then
+			hooksecurefunc("UIParent_ManageFramePositions", function()
+				if self:IsEnabled() and not InCombatLockdown() then
+					self.bar:PerformLayout()
+				end
+			end)
+		end
 	end
 	self.bar:Enable()
 	self:ToggleOptions()

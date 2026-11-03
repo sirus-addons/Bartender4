@@ -10,7 +10,7 @@ local VehicleBarMod = Bartender4:NewModule("Vehicle", "AceHook-3.0")
 -- fetch upvalues
 local Bar = Bartender4.Bar.prototype
 
-local table_insert, setmetatable, pairs = table.insert, setmetatable, pairs
+local setmetatable = setmetatable
 
 -- GLOBALS: MainMenuBarVehicleLeaveButton, CanExitVehicle
 
@@ -21,8 +21,6 @@ local defaults = { profile = Bartender4:Merge({
 	enabled = true,
 	visibility = {
 		vehicleui = false,
-		custom = true,
-		customdata = "[target=vehicle,exists]show;hide"
 	},
 }, Bartender4.Bar.defaults) }
 
@@ -36,9 +34,12 @@ function VehicleBarMod:OnEnable()
 		self.bar = setmetatable(Bartender4.Bar:Create("Vehicle", self.db.profile, L["Vehicle Bar"]), {__index = VehicleBar})
 		self.bar.content = MainMenuBarVehicleLeaveButton
 		self.bar.content:SetParent(self.bar)
-		self.bar.content.ClearSetPoint = self.bar.ClearSetPoint
 	end
-	self:RawHook("MainMenuBarVehicleLeaveButton_Update", true)
+	if Bartender4.IsDF then
+		self:SecureHook("MainMenuBarVehicleLeaveButton_Update", "UIParent_ManageFramePositions")
+	else
+		self:RawHook("MainMenuBarVehicleLeaveButton_Update", true)
+	end
 	self:SecureHook("UIParent_ManageFramePositions")
 	self.bar:Enable()
 	self:ToggleOptions()

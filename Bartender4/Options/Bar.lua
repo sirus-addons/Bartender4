@@ -191,7 +191,6 @@ local validAnchors = {
 	BOTTOMRIGHT = "BOTTOMRIGHT",
 }
 
-local options
 function Bar:GetOptionObject()
 	local otbl = {
 		general = {
@@ -435,11 +434,6 @@ function Bar:GetOptionObject()
 					get = posGet,
 					set = posSet,
 					dialogControl = "NumberEditBox",
-				},
-				nl2 = {
-					order = 25,
-					type = "description",
-					name = "",
 				},
 				centerhorz = {
 					order = 31,

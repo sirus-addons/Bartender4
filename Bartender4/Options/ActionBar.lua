@@ -4,7 +4,6 @@
 ]]
 local L = LibStub("AceLocale-3.0"):GetLocale("Bartender4")
 local StateBar = Bartender4.StateBar.prototype
-local ActionBar = Bartender4.ActionBar
 
 --[[===================================================================================
 	ActionBar Options

@@ -42,9 +42,9 @@ function StanceBarMod:OnEnable()
 	self:ToggleOptions()
 	self.bar:RegisterEvent("PLAYER_ENTERING_WORLD")
 	self.bar:RegisterEvent("UPDATE_SHAPESHIFT_FORMS")
-	self.bar:RegisterEvent("SPELL_UPDATE_COOLDOWN")
-	self.bar:RegisterEvent("SPELL_UPDATE_USABLE")
-	self.bar:RegisterEvent("PLAYER_AURAS_CHANGED")
+	self.bar:RegisterEvent("UPDATE_SHAPESHIFT_FORM")
+	self.bar:RegisterEvent("UPDATE_SHAPESHIFT_USABLE")
+	self.bar:RegisterEvent("UPDATE_SHAPESHIFT_COOLDOWN")
 	self.bar:RegisterEvent("PLAYER_REGEN_ENABLED")
 	self.bar:RegisterEvent("ACTIONBAR_PAGE_CHANGED")
 	self:RegisterEvent("UPDATE_BINDINGS", "ReassignBindings")
@@ -57,10 +57,6 @@ StanceBarMod.button_count = 10
 function StanceBarMod:ApplyConfig()
 	if not self:IsEnabled() then return end
 	self.bar:ApplyConfig(self.db.profile)
-
-	if GetNumShapeshiftForms() == 0 then
-		self:Disable()
-	end
 end
 
 function StanceBarMod:ReassignBindings()
@@ -74,6 +70,7 @@ function StanceBarMod:ReassignBindings()
 			SetOverrideBindingClick(self.bar, false, key, real_button)
 		end
 	end
+	self.bar:ForAll("UpdateHotkeys")
 end
 
 function StanceButtonPrototype:Update()
@@ -103,8 +100,6 @@ function StanceButtonPrototype:Update()
 	else
 		self.icon:SetVertexColor(0.4, 0.4, 0.4)
 	end
-
-	self:UpdateHotkeys()
 end
 
 function StanceButtonPrototype:UpdateHotkeys()
@@ -192,8 +187,6 @@ function StanceBarMod:CreateStanceButton(id)
 	button.hotkey = _G[button:GetName() .. "HotKey"]
 	button.normalTexture = button:GetNormalTexture()
 	button.normalTexture:SetTexture("")
---	button.checkedTexture = button:GetCheckedTexture()
---	button.checkedTexture:SetTexture("")
 
 	button.OnEnter = button:GetScript("OnEnter")
 	button:SetScript("OnEnter", onEnter)
@@ -218,7 +211,6 @@ function StanceBar:ApplyConfig(config)
 	end
 
 	self:UpdateStanceButtons()
-	self:ForAll("ApplyStyle", self.config.style)
 end
 
 StanceBar.button_width = 30
@@ -237,6 +229,7 @@ function StanceBar:UpdateStanceButtons()
 	for i = 1, num_stances do
 		buttons[i]:Show()
 		buttons[i]:Update()
+		buttons[i]:UpdateHotkeys()
 	end
 
 	for i = num_stances+1, #buttons do
@@ -261,8 +254,13 @@ function StanceBar:UpdateStanceButtons()
 end
 
 function StanceBar:OnEvent(event, ...)
-	if event == "PLAYER_ENTERING_WORLD" or event == "UPDATE_SHAPESHIFT_FORMS" and not InCombatLockdown() then
-		self:UpdateStanceButtons()
+	if event == "PLAYER_ENTERING_WORLD" or event == "UPDATE_SHAPESHIFT_FORMS" or (event == "PLAYER_REGEN_ENABLED" and self.updatePending) then
+		if InCombatLockdown() then
+			self.updatePending = true
+		else
+			self.updatePending = nil
+			self:UpdateStanceButtons()
+		end
 	else
 		self:ForAll("Update")
 	end

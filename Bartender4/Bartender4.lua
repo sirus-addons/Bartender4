@@ -3,12 +3,18 @@
 	All rights reserved.
 ]]
 local AceAddon = LibStub("AceAddon-3.0")
-Bartender4 = AceAddon:NewAddon("Bartender4", "AceConsole-3.0", "AceEvent-3.0", "AceHook-3.0")
+Bartender4 = AceAddon:NewAddon("Bartender4", "AceConsole-3.0", "AceEvent-3.0")
+Bartender4.IsDF = EditModeManagerFrame ~= nil
 
 local L = LibStub("AceLocale-3.0"):GetLocale("Bartender4")
 
+local UIHider = CreateFrame("Frame")
+UIHider:Hide()
+Bartender4.UIHider = UIHider
+
 local LDB = LibStub("LibDataBroker-1.1", true)
 local LDBIcon = LibStub("LibDBIcon-1.0", true)
+local createLDBLauncher
 
 local defaults = {
 	profile = {
@@ -39,18 +45,15 @@ function Bartender4:OnInitialize()
 	self:RegisterEvent("PLAYER_REGEN_DISABLED", "CombatLockdown")
 
 	self:HideBlizzard()
-	self:UpdateBlizzardVehicle()
 
 	if LDB then
 		createLDBLauncher()
 	end
 
 	BINDING_HEADER_Bartender4 = "Bartender4"
-	BINDING_CATEGORY_Bartender4 = "Action Bars"
 	BINDING_NAME_BTTOGGLEACTIONBARLOCK = BINDING_NAME_TOGGLEACTIONBARLOCK
 	for i=1,10 do
 		if i > 1 then
-			_G[('BINDING_CATEGORY_BT4BLANK%d'):format(i)] = "Action Bars" -- myBindings2 compat
 			_G[('BINDING_HEADER_BT4BLANK%d'):format(i)] = "Bartender4 " .. L["Bar %s"]:format(i)
 		end
 		for k=1,12 do
@@ -58,9 +61,7 @@ function Bartender4:OnInitialize()
 		end
 	end
 	BINDING_HEADER_BT4PET = "Bartender4 " .. L["Pet Bar"]
-	BINDING_CATEGORY_BT4PET = "Action Bars"
 	BINDING_HEADER_BT4STANCE = "Bartender4 " .. L["Stance Bar"]
-	BINDING_CATEGORY_BT4STANCE = "Action Bars"
 	for k=1,10 do
 		_G[("BINDING_NAME_CLICK BT4PetButton%d:LeftButton"):format(k)] = ("Bartender4 %s %s"):format(L["Pet Bar"], L["Button %s"]:format(k))
 		_G[("BINDING_NAME_CLICK BT4StanceButton%d:LeftButton"):format(k)] = ("Bartender4 %s %s"):format(L["Stance Bar"], L["Button %s"]:format(k))
@@ -68,24 +69,17 @@ function Bartender4:OnInitialize()
 end
 
 function Bartender4:HideBlizzard()
-	MultiActionBar_UpdateGrid = function() end
-
 	-- Hide MultiBar Buttons, but keep the bars alive
-	for i=1,12 do
-		_G["ActionButton" .. i]:Hide()
-		_G["ActionButton" .. i]:UnregisterAllEvents()
-
-		_G["MultiBarBottomLeftButton" .. i]:Hide()
-		_G["MultiBarBottomLeftButton" .. i]:UnregisterAllEvents()
-
-		_G["MultiBarBottomRightButton" .. i]:Hide()
-		_G["MultiBarBottomRightButton" .. i]:UnregisterAllEvents()
-
-		_G["MultiBarRightButton" .. i]:Hide()
-		_G["MultiBarRightButton" .. i]:UnregisterAllEvents()
-
-		_G["MultiBarLeftButton" .. i]:Hide()
-		_G["MultiBarLeftButton" .. i]:UnregisterAllEvents()
+	for _, prefix in ipairs({"ActionButton", "MultiBarBottomLeftButton", "MultiBarBottomRightButton", "MultiBarRightButton", "MultiBarLeftButton", "BonusActionButton"}) do
+		for i=1,12 do
+			local button = _G[prefix .. i]
+			button:Hide()
+			button:SetAttribute("statehidden", true)
+			button:UnregisterAllEvents()
+		end
+	end
+	for _, bar in ipairs({MultiBarBottomLeft, MultiBarBottomRight, MultiBarRight, MultiBarLeft}) do
+		bar:UnregisterAllEvents()
 	end
 
 	UIPARENT_MANAGED_FRAME_POSITIONS['MainMenuBar'] = nil
@@ -108,20 +102,23 @@ function Bartender4:HideBlizzard()
 
 	PossessBarFrame:UnregisterAllEvents()
 	PossessBarFrame:Hide()
-	
-	PetActionBarFrame:SetParent(MainMenuBar)
 
-	if PlayerTalentFrame then
-		PlayerTalentFrame:UnregisterEvent('ACTIVE_TALENT_GROUP_CHANGED')
-	else
-		hooksecurefunc('TalentFrame_LoadUI', function() PlayerTalentFrame:UnregisterEvent('ACTIVE_TALENT_GROUP_CHANGED') end)
+	PetActionBarFrame:UnregisterAllEvents()
+	PetActionBarFrame:SetParent(MainMenuBar)
+	for i=1,10 do
+		_G["PetActionButton" .. i]:UnregisterAllEvents()
+	end
+
+	if self.IsDF then
+		MainMenuBar:SetParent(UIHider)
+		ShapeshiftBarFrame:SetParent(UIHider)
+		PossessBarFrame:SetParent(UIHider)
 	end
 end
 
---[[ function Bartender4:OnEnable()
-	--
+function Bartender4:OnEnable()
+	self:UpdateBlizzardVehicle()
 end
---]]
 
 function Bartender4:RegisterDefaultsKey(key, subdefaults)
 	defaults.profile[key] = subdefaults
@@ -142,6 +139,8 @@ function Bartender4:UpdateModuleConfigs()
 			v:ApplyConfig()
 		end
 	end
+	self.Bar:ForAll("ForAll", "SetAttribute", "buttonlock", self.db.profile.buttonlock)
+	self.Bar:ForAll("UpdateOnClickDown")
 	if LDB and LDBIcon then
 		LDBIcon:Refresh("Bartender4", Bartender4.db.profile.minimapIcon)
 	end
@@ -154,19 +153,20 @@ function Bartender4:UpdateModuleConfigs()
 end
 
 function Bartender4:UpdateBlizzardVehicle()
+	local vehicleEventFrame = self.IsDF and MainMenuBar or MainMenuBarArtFrame
 	if self.db.profile.blizzardVehicle then
-		MainMenuBarArtFrame:RegisterEvent("UNIT_ENTERING_VEHICLE")
-		MainMenuBarArtFrame:RegisterEvent("UNIT_ENTERED_VEHICLE")
-		MainMenuBarArtFrame:RegisterEvent("UNIT_EXITING_VEHICLE")
-		MainMenuBarArtFrame:RegisterEvent("UNIT_EXITED_VEHICLE")
-		MainMenuBarArtFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
-		local vehicleModule = Bartender4:GetModule("Vehicle", true)
-		vehicleModule:Disable()
-		vehicleModule.blizzardVehicle = true
-		
-		RegisterStateDriver(MainMenuBar, "visibility", "hide")
-		RegisterStateDriver(ShapeshiftBarFrame, "visibility", "hide")
-		RegisterStateDriver(PossessBarFrame, "visibility", "hide")
+		vehicleEventFrame:RegisterEvent("UNIT_ENTERING_VEHICLE")
+		vehicleEventFrame:RegisterEvent("UNIT_ENTERED_VEHICLE")
+		vehicleEventFrame:RegisterEvent("UNIT_EXITING_VEHICLE")
+		vehicleEventFrame:RegisterEvent("UNIT_EXITED_VEHICLE")
+		vehicleEventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
+		Bartender4:GetModule("Vehicle"):Disable()
+
+		if not self.IsDF then
+			RegisterStateDriver(MainMenuBar, "visibility", "hide")
+			RegisterStateDriver(ShapeshiftBarFrame, "visibility", "hide")
+			RegisterStateDriver(PossessBarFrame, "visibility", "hide")
+		end
 
 		if not self.vehicleController then
 			self.vehicleController = CreateFrame("Frame", nil, UIParent, "SecureHandlerStateTemplate")
@@ -185,46 +185,52 @@ function Bartender4:UpdateBlizzardVehicle()
 			]])
 		end
 		RegisterStateDriver(self.vehicleController, "vehicle", "[vehicleui]vehicle;novehicle")
-		local btn = "VehicleMenuBarActionButton%d"
-		for i=1,6 do
-			local name = btn:format(i)
-			local button = _G[name]
-			button.UpdateUsable = Bartender4.Button.prototype.UpdateUsable
-			button:SetScript("OnUpdate", Bartender4.Button.onUpdate)
-			button.icon = _G[("%sIcon"):format(name)]
-			button.border = _G[("%sBorder"):format(name)]
-			button.cooldown = _G[("%sCooldown"):format(name)]
-			button.macroName = _G[("%sName"):format(name)]
-			button.hotkey = _G[("%sHotKey"):format(name)]
-			button.count = _G[("%sCount"):format(name)]
-			button.flash = _G[("%sFlash"):format(name)]
-			button.BT4init = true
-			button:SetParent(VehicleMenuBarActionButtonFrame)
+		if not self.IsDF then
+			local btn = "VehicleMenuBarActionButton%d"
+			for i=1,6 do
+				local name = btn:format(i)
+				local button = _G[name]
+				button.UpdateUsable = Bartender4.Button.prototype.UpdateUsable
+				button:SetScript("OnUpdate", Bartender4.Button.onUpdate)
+				button.icon = _G[("%sIcon"):format(name)]
+				button.border = _G[("%sBorder"):format(name)]
+				button.cooldown = _G[("%sCooldown"):format(name)]
+				button.macroName = _G[("%sName"):format(name)]
+				button.hotkey = _G[("%sHotKey"):format(name)]
+				button.count = _G[("%sCount"):format(name)]
+				button.flash = _G[("%sFlash"):format(name)]
+				button.BT4init = true
+				button:SetParent(VehicleMenuBarActionButtonFrame)
+			end
+			self.vehicleButtonsChanged = true
 		end
 	else
-		MainMenuBarArtFrame:UnregisterEvent("UNIT_ENTERING_VEHICLE")
-		MainMenuBarArtFrame:UnregisterEvent("UNIT_ENTERED_VEHICLE")
-		MainMenuBarArtFrame:UnregisterEvent("UNIT_EXITING_VEHICLE")
-		MainMenuBarArtFrame:UnregisterEvent("UNIT_EXITED_VEHICLE")
-		MainMenuBarArtFrame:UnregisterEvent("PLAYER_ENTERING_WORLD")
+		vehicleEventFrame:UnregisterEvent("UNIT_ENTERING_VEHICLE")
+		vehicleEventFrame:UnregisterEvent("UNIT_ENTERED_VEHICLE")
+		vehicleEventFrame:UnregisterEvent("UNIT_EXITING_VEHICLE")
+		vehicleEventFrame:UnregisterEvent("UNIT_EXITED_VEHICLE")
+		vehicleEventFrame:UnregisterEvent("PLAYER_ENTERING_WORLD")
 
 		local vehicleModule = Bartender4:GetModule("Vehicle")
-		vehicleModule.blizzardVehicle = nil
 		if vehicleModule.db and vehicleModule.db.profile.enabled then
 			vehicleModule:Enable()
 		end
-		UnregisterStateDriver(MainMenuBar, "visibility")
-		UnregisterStateDriver(ShapeshiftBarFrame, "visibility")
-		UnregisterStateDriver(PossessBarFrame, "visibility")
+		if not self.IsDF then
+			UnregisterStateDriver(MainMenuBar, "visibility")
+			UnregisterStateDriver(ShapeshiftBarFrame, "visibility")
+			UnregisterStateDriver(PossessBarFrame, "visibility")
+		end
 		if self.vehicleController then
 			UnregisterStateDriver(self.vehicleController, "vehicle")
 		end
-		local btn = "VehicleMenuBarActionButton%d"
-		for i=1,6 do
-			local name = btn:format(i)
-			local button = _G[name]
-			button.BT4init = nil
-			button:SetScript("OnUpdate", ActionButton_OnUpdate)
+		if self.vehicleButtonsChanged then
+			local btn = "VehicleMenuBarActionButton%d"
+			for i=1,6 do
+				local button = _G[btn:format(i)]
+				button.BT4init = nil
+				button:SetScript("OnUpdate", ActionButton_OnUpdate)
+			end
+			self.vehicleButtonsChanged = nil
 		end
 	end
 end
@@ -232,14 +238,6 @@ end
 function Bartender4:CombatLockdown()
 	self:Lock()
 	LibStub("AceConfigDialog-3.0"):Close("Bartender4")
-end
-
-function Bartender4:ToggleLock()
-	if self.Locked then
-		self:Unlock()
-	else
-		self:Lock()
-	end
 end
 
 local getSnap, setSnap
@@ -285,12 +283,12 @@ function Bartender4:ShowUnlockDialog()
 		header:SetWidth(256); header:SetHeight(64)
 		header:SetPoint('TOP', 0, 12)
 
-		local title = f:CreateFontString('ARTWORK')
+		local title = f:CreateFontString(nil, 'ARTWORK')
 		title:SetFontObject('GameFontNormal')
 		title:SetPoint('TOP', header, 'TOP', 0, -14)
 		title:SetText(L["Bartender4"])
 
-		local desc = f:CreateFontString('ARTWORK')
+		local desc = f:CreateFontString(nil, 'ARTWORK')
 		desc:SetFontObject('GameFontHighlight')
 		desc:SetJustifyV('TOP')
 		desc:SetJustifyH('LEFT')
@@ -333,6 +331,10 @@ function Bartender4:HideUnlockDialog()
 end
 
 function Bartender4:Unlock()
+	if InCombatLockdown() then
+		self:Print(L["Cannot access options during combat."])
+		return
+	end
 	if self.Locked then
 		self.Locked = false
 		Bartender4.Bar:ForAll("Unlock")
@@ -353,7 +355,7 @@ function Bartender4:Merge(target, source)
 	for k,v in pairs(source) do
 		if type(v) == "table" then
 			target[k] = self:Merge(target[k], v)
-		elseif not target[k] then
+		elseif target[k] == nil then
 			target[k] = v
 		end
 	end
@@ -405,7 +407,9 @@ function createLDBLauncher()
 					Bartender4["Lock"](Bartender4)
 				end
 			elseif msg == "RightButton" then
-				if LibStub("AceConfigDialog-3.0").OpenFrames["Bartender4"] then
+				if InCombatLockdown() then
+					Bartender4:Print(L["Cannot access options during combat."])
+				elseif LibStub("AceConfigDialog-3.0").OpenFrames["Bartender4"] then
 					LibStub("AceConfigDialog-3.0"):Close("Bartender4")
 				else
 					LibStub("AceConfigDialog-3.0"):Open("Bartender4")
