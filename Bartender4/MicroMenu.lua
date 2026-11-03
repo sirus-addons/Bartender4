@@ -36,12 +36,25 @@ function MicroMenuMod:OnEnable()
 		self.bar = setmetatable(Bartender4.ButtonBar:Create("MicroMenu", self.db.profile, L["Micro Menu"]), {__index = MicroMenuBar})
 		local buttons = {}
 
-		for _, button in pairs(SHARED_BARTENDER4_MICROMENU_BUTTONS) do
-			button = _G[button]
+		if SHARED_BARTENDER4_MICROMENU_BUTTONS then
+			for _, button in pairs(SHARED_BARTENDER4_MICROMENU_BUTTONS) do
+				button = _G[button]
 
-			if button then
-				table_insert(buttons, button)
+				if button then
+					table_insert(buttons, button)
+				end
 			end
+		else
+			table_insert(buttons, CharacterMicroButton)
+			table_insert(buttons, SpellbookMicroButton)
+			table_insert(buttons, TalentMicroButton)
+			table_insert(buttons, AchievementMicroButton)
+			table_insert(buttons, QuestLogMicroButton)
+			table_insert(buttons, SocialsMicroButton)
+			table_insert(buttons, PVPMicroButton)
+			table_insert(buttons, LFDMicroButton)
+			table_insert(buttons, MainMenuMicroButton)
+			table_insert(buttons, HelpMicroButton)
 		end
 		
 		self.bar.buttons = buttons
